@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>縮短網址產生器</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 50px; }
+    input { width: 300px; padding: 10px; }
+    button { padding: 10px 20px; }
+    .result { margin-top: 20px; font-size: 1.2em; color: green; }
+  </style>
+</head>
+<body>
+  <h1>縮短網址產生器</h1>
+  <input type="text" id="urlInput" placeholder="請輸入網址" />
+  <button onclick="shortenUrl()">產生短網址</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    const socket = io();
+
+    function shortenUrl() {
+      const url = document.getElementById('urlInput').value;
+      if (url.trim() === '') return alert('請輸入網址');
+      socket.emit('shorten-url', url);
+    }
+
+    socket.on('shorten-result', (shortUrl) => {
+      document.getElementById('result').innerHTML = `短網址：<a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+    });
+  </script>
+</body>
+</html>
